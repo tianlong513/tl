@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>springboot-thymeleaf demo</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+<script>
+    $(function () {
+        $(".form-control2").hide();
+        $(".form-control3").hide();
+        $("#province").click( function () {
+            var provinceId = $("#province").val();
+
+            if (provinceId == "") {
+                $(".form-control2").hide();
+                return;
+            }
+            $(".form-control2").show();
+            $(".form-control3").hide();
+            $.ajax({
+                type: "get",
+                url: "city",
+                data: {"provinceId": provinceId},
+                success: function (data) {
+                    console.log(data)
+                    var city = $("#city").empty();
+                    for (var i = 0; i < data.result.length; i++) {
+                        console.log(data.result[i].codeName)
+                        city.append("<option value='" + data.result[i].id + "'>" + data.result[i].codeName + "</option>>")
+                    }
+
+                }
+            })
+        })
+        $("#city").change(function () {
+            var cityId = $("#city").val();
+            if (cityId == "") {
+                return;
+            }
+            $(".form-control3").show();
+            $.ajax({
+                type: "get",
+                url: "area",
+                data: {"cityId": cityId},
+                success: function (data) {
+                    console.log(data)
+                    var city = $("#area ").empty();
+                    for (var i = 0; i < data.result.length; i++) {
+                        console.log(data.result[i].codeName)
+                        city.append("<option value='" + data.result[i].codeName + "'>" + data.result[i].codeName + "</option>>")
+                    }
+
+                }
+            })
+        })
+    })
+</script>
+<body>
+<div class="row">
+    <div class="form-control">
+        <select id="province" class="form-control1" style="width: 77px">
+            <option value="">请选择省</option>
+            <option th:each="car,userStat:${regions}" th:value="${car.getCode()}"
+                    th:text="${car.getCodeName()}"></option>
+        </select>
+        <select id="city" class="form-control2" style="width: 77px">
+            <option value="">请选择城市</option>
+        </select>
+        <select id="area" class="form-control3" style="width: 77px">
+            <option value="" id="re">请选择城市</option>
+        </select>
+    </div>
+</div>
+
+</body>
+</html>

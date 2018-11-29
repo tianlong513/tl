@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tl.mapper.UserInfoMapper">
+
+    <resultMap id="SysRole" type="com.tl.entity.SysUserRole">
+        <id column="rid" property="id"/>
+        <result column="rname" property="rname"/>
+        <result column="uid" property="uid"/>
+    </resultMap>
+
+    <resultMap id="queryUserInfoRole" type="com.tl.entity.SysUser">
+        <id column="uid" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="sex" property="sex"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="sysUserRoles" javaType="List" resultMap="SysRole"/>
+
+    </resultMap>
+
+    <sql id="userInfoRole">
+        sys_user.id AS uid,username,password,sex,nick_name,create_time,sys_user_role.id as rid,rname,uid
+    </sql>
+
+    <select id="queryUserInfo" resultMap="queryUserInfoRole">
+        select
+        <include refid="userInfoRole"/>
+        from sys_user
+        inner join sys_user_role on sys_user.id = sys_user_role.uid where username=#{username}
+    </select>
+
+    <select id="queryUserRole" resultType="com.tl.entity.SysUserRole">
+        select * from sys_user_role where
+        uid=(select id from sys_user where username=#{username})
+    </select>
+
+    <select id="findByEmailType" resultType="com.tl.entity.SysUser">
+      select * from sys_user where id =1
+    </select>
+</mapper>
