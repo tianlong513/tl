@@ -28,7 +28,7 @@ public class TimeTaskServiceImpl implements TimeTaskService {
      *
      * @return
      */
-    @Scheduled(cron = "0 0 6 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     @Override
     public SysUser findByEmailType() {
         logger.info("进入天气定时任务");
